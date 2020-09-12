@@ -1,0 +1,13 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/CountryGWP
+/CountryGWP/bin/Debug/netcoreapp3.1
+/CountryGWP/obj
+/CountryGWP.Business.Layer/bin/Debug/netcoreapp3.1
+/CountryGWP.Business.Layer/obj
+/CountryGWP.DataAccess.Layer/bin/Debug/netcoreapp3.1
+/CountryGWP.DataAccess.Layer/obj
+/CountryGWP.UnitTest/bin/Debug/netcoreapp3.1
+/CountryGWP.UnitTest/obj
