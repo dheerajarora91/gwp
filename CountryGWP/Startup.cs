@@ -17,6 +17,9 @@ using CountryGWP.DataAccess.Layer.Repositories.Interfaces;
 using CountryGWP.Business.Layer.Services.Interfaces;
 using CountryGWP.DataAccess.Layer.Repositories;
 using CountryGWP.Business.Layer.Services;
+using Microsoft.OpenApi.Models;
+using System.Reflection;
+using System.IO;
 
 namespace CountryGWP
 {
@@ -42,6 +45,19 @@ namespace CountryGWP
             services.AddScoped<ICountryGwpService, CountryGwpService>();
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { 
+                    Title = "Country GWP API", 
+                    Version = "v1",
+                    Description = "An API to perform country specific GWP operations",
+                });
+            });
+
+            services.AddCors();
+
+            services.AddResponseCaching();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +67,17 @@ namespace CountryGWP
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(opt => opt.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
+            app.UseResponseCaching();
+
+            app.UseSwagger();
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Country GWP API");
+            });
 
             app.UseHttpsRedirection();
 

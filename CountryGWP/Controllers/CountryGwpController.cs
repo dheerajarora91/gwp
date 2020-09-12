@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using CountryGWP.Business.Layer.Services.Interfaces;
 using CountryGWP.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -11,18 +12,22 @@ namespace CountryGWP.Controllers
 {
     [ApiController]
     [Route("server/api")]
-    public class CountryGwp : ControllerBase
+    public class CountryGwpController : ControllerBase
     {
         private readonly ICountryGwpService _countryGwpService;
 
-        public CountryGwp(ICountryGwpService countryGwpService)
+        public CountryGwpController(ICountryGwpService countryGwpService)
         {
             _countryGwpService = countryGwpService ??
                 throw new ArgumentNullException(nameof(countryGwpService));
         }
-
+        
         [HttpPost("gwp/avg")]
-        public async Task<IActionResult> AverageGwp(CountryGwpRequest request)
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(Business.Layer.Models.CountryGwp),StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ResponseCache(Duration = 60, Location = ResponseCacheLocation.Any)]
+        public async Task<IActionResult> AverageGwpAsync([FromBody]CountryGwpRequest request)
         {
             var coutriesGwp = await _countryGwpService.AverageGwpAsync(request.Country,request.Lob);
            
@@ -32,13 +37,6 @@ namespace CountryGWP.Controllers
             }
             
             return Ok(coutriesGwp);
-        }
-
-        [HttpGet]
-        public async Task<IActionResult> GetCountriesGwp()
-        {
-            var countiresGwp = await _countryGwpService.GetCountriesGwp();
-            return Ok(countiresGwp);
         }
     }
 }
