@@ -62,6 +62,12 @@ namespace CountryGWP
             {
                 endpoints.MapControllers();
             });
+
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<CountryGwpDbContext>();
+                context.Database.Migrate();
+            }
         }
     }
 }
